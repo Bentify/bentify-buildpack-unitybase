@@ -2,6 +2,11 @@
 
 BPLOG_PREFIX="buildpack.ub"
 
+#HEROKU_SSL_VERIFY=disable heroku login
+
+# Create user
+# /usr/sbin/useradd --user-group --create-home --shell /bin/false app
+
 echo "Installing dependencies..."
 uname -a
 
@@ -9,13 +14,118 @@ uname -a
 #apt-get install -y curl wget libcurl4 libnspr4 libuv1 libpython-stdlib libpq-dev lsof tzdata postgresql-client
 # curl -sL https://deb.nodesource.com/setup_12.x | bash -
 # apt-get install nodejs
-node -v
-wget https://unitybase.info/media/files/ub-server.deb
-dpkg -i ub-server.deb
+# node -v
+#wget https://unitybase.info/media/files/ub-server.deb --no-check-certificate
+
+
+# fail fast
+set -e
+
+# debug
+# set -x
+
+# parse and derive params
+BUILD_DIR=$1
+CACHE_DIR=$2
+LP_DIR=`cd $(dirname $0); cd ..; pwd`
+
+function error() {
+  echo " !     $*" >&2
+  exit 1
+}
+
+function topic() {
+  echo "-----> $*"
+}
+
+function indent() {
+  c='s/^/       /'
+  case $(uname) in
+	Darwin) sed -l "$c";;
+	*)      sed -u "$c";;
+  esac
+}
+
+DPKG_CACHE_DIR="$CACHE_DIR/dpkg/cache"
+
+mkdir -p $DPKG_CACHE_DIR
+
+for URL in $(cat $BUILD_DIR/Debfile); do
+  if [ -f $DPKG_CACHE_DIR/`basename $URL` ]; then
+	topic "Loading cached $URL"
+  else
+    topic "Fetching $URL"
+    curl -L -o $DPKG_CACHE_DIR/`basename $URL` $URL  --insecure
+  fi
+done
+
+mkdir -p $BUILD_DIR/.dpkg
+
+for DEB in $(ls -1 $DPKG_CACHE_DIR/*.deb); do
+  topic "Installing $(basename $DEB)"
+  dpkg -x $DEB $BUILD_DIR/.dpkg/
+done
+
+topic "Writing profile script"
+mkdir -p $BUILD_DIR/.profile.d
+cat <<EOF >$BUILD_DIR/.profile.d/000_dpkg.sh
+export HEROKU_SKIP_LIBPQ12=1
+export PATH="\$HOME/.dpkg/usr/bin:$PATH"
+export LD_LIBRARY_PATH="\$HOME/.dpkg/usr/lib:\$LD_LIBRARY_PATH"
+export LD_LIBRARY_PATH="\$HOME/.dpkg/usr/lib/x86_64-linux-gnu:\$LD_LIBRARY_PATH"
+export LD_LIBRARY_PATH="\$HOME/.dpkg/lib:\$LD_LIBRARY_PATH"
+export LD_LIBRARY_PATH="\$HOME/.dpkg/lib/x86_64-linux-gnu:\$LD_LIBRARY_PATH"
+export LD_LIBRARY_PATH="\$HOME/.dpkg/lib64:\$LD_LIBRARY_PATH"
+export LD_LIBRARY_PATH="/usr/lib/x86_64-linux-gnu:\$LD_LIBRARY_PATH"
+export INCLUDE_PATH="\$HOME/.dpkg/usr/include:\$INCLUDE_PATH"
+export CPATH="\$INCLUDE_PATH"
+export CPPPATH="\$INCLUDE_PATH"
+EOF
+
+
+
+
+export HOME=$BUILD_DIR
+source $HOME/.profile.d/000_dpkg.sh
+
+
+
+#chmod +x ub-server.deb && 
+
+echo "------------------------------------------"
+whoami
+
+#dpkg-deb -x ub-server.deb app
+#dpkg-deb -e ub-server.deb app
+#dpkg -i ub-server.deb
 ub -v
-cd app && npm install
+echo "=========================================="
+
+
+
+# cd app && npm install
+# pwd
+# chmod 755 init.sh && ./init.sh
+cd ~/app
 pwd
-chmod 755 init.sh && ./init.sh
+ls -la
+
+#strace -f ub
+
+echo "////////"
+#ldconfig -p | grep libpq
+#strace -f ub
+echo "{{{{{{{{{"
+
+env
+
+npm install
+
+# npx ubcli createStore
+# npx ubcli initDB -p admin -dba dbadmin -dbaPwd dba2634tgh374 -create -host http://localhost:8881
+
+
+
 ub -cfg ubConfig.json
 
 echo "Compile ..."
