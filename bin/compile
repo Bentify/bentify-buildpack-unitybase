@@ -1,0 +1,14 @@
+#!/bin/bash
+
+### Configure environment
+
+set -o errexit    # always exit on error
+set -o pipefail   # don't ignore exit codes when piping output
+unset GIT_DIR     # Avoid GIT_DIR leak from previous build steps
+
+BPLOG_PREFIX="buildpack.ub"
+
+ls -le
+pwd
+
+echo "Compile ..."
