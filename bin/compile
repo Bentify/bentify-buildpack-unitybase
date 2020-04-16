@@ -9,6 +9,7 @@ unset GIT_DIR     # Avoid GIT_DIR leak from previous build steps
 BPLOG_PREFIX="buildpack.ub"
 
 echo "Installing dependencies..."
+uname -a
 
 apt-get update
 apt-get install -y curl wget libcurl4 libnspr4 libuv1 libpython-stdlib libpq-dev lsof tzdata postgresql-client
