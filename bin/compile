@@ -8,8 +8,20 @@ unset GIT_DIR     # Avoid GIT_DIR leak from previous build steps
 
 BPLOG_PREFIX="buildpack.ub"
 
-ls -la
+echo "Installing dependencies..."
+
+apt-get update
+apt-get install -y curl wget libcurl4 libnspr4 libuv1 libpython-stdlib libpq-dev lsof tzdata postgresql-client
+curl -sL https://deb.nodesource.com/setup_12.x | bash -
+apt-get install nodejs
+node -v
+wget https://unitybase.info/media/files/ub-server.deb
+dpkg -i ub-server.deb
+ub -v
+cd app && npm install
 pwd
+chmod 755 init.sh && ./init.sh
+ub -cfg ubConfig.json
 
 echo "Compile ..."
 exit 0
