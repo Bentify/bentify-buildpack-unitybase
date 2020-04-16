@@ -16,6 +16,9 @@ unset GIT_DIR     # Avoid GIT_DIR leak from previous build steps
 # shellcheck disable=SC2034
 BPLOG_PREFIX="buildpack.nodejs"
 
+pwd
+ls -la
+
 ### Configure directories
 
 BUILD_DIR=${1:-}
