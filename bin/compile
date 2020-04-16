@@ -8,7 +8,8 @@ unset GIT_DIR     # Avoid GIT_DIR leak from previous build steps
 
 BPLOG_PREFIX="buildpack.ub"
 
-ls -le
+ls -la
 pwd
 
 echo "Compile ..."
+exit 0
