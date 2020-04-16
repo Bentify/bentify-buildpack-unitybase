@@ -149,20 +149,20 @@ export YARN_CACHE_FOLDER NPM_CONFIG_CACHE
 install_bins() {
   local node_engine npm_engine yarn_engine npm_version node_version
 
-  node_engine=$(read_json "$BUILD_DIR/package.json" ".engines.node")
-  npm_engine=$(read_json "$BUILD_DIR/package.json" ".engines.npm")
-  yarn_engine=$(read_json "$BUILD_DIR/package.json" ".engines.yarn")
+  # node_engine=$(read_json "$BUILD_DIR/package.json" ".engines.node")
+  # npm_engine=$(read_json "$BUILD_DIR/package.json" ".engines.npm")
+  # yarn_engine=$(read_json "$BUILD_DIR/package.json" ".engines.yarn")
 
-  meta_set "node-version-request" "$node_engine"
-  meta_set "npm-version-request" "$npm_engine"
-  meta_set "yarn-version-request" "$yarn_engine"
+  # meta_set "node-version-request" "$node_engine"
+  # meta_set "npm-version-request" "$npm_engine"
+  # meta_set "yarn-version-request" "$yarn_engine"
 
-  echo "engines.node (package.json):  ${node_engine:-unspecified}"
-  echo "engines.npm (package.json):   ${npm_engine:-unspecified (use default)}"
-  if $YARN; then
-    echo "engines.yarn (package.json):  ${yarn_engine:-unspecified (use default)}"
-  fi
-  echo ""
+  # echo "engines.node (package.json):  ${node_engine:-unspecified}"
+  # echo "engines.npm (package.json):   ${npm_engine:-unspecified (use default)}"
+  # if $YARN; then
+  #   echo "engines.yarn (package.json):  ${yarn_engine:-unspecified (use default)}"
+  # fi
+  # echo ""
 
   warn_node_engine "$node_engine"
 
