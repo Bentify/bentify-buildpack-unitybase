@@ -11,8 +11,8 @@ BPLOG_PREFIX="buildpack.ub"
 echo "Installing dependencies..."
 uname -a
 
-apt-get update
-apt-get install -y curl wget libcurl4 libnspr4 libuv1 libpython-stdlib libpq-dev lsof tzdata postgresql-client
+#apt-get update
+#apt-get install -y curl wget libcurl4 libnspr4 libuv1 libpython-stdlib libpq-dev lsof tzdata postgresql-client
 curl -sL https://deb.nodesource.com/setup_12.x | bash -
 apt-get install nodejs
 node -v
