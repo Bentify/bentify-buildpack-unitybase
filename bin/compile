@@ -14,6 +14,7 @@ set -e
 # parse and derive params
 BUILD_DIR=$1
 CACHE_DIR=$2
+ENV_DIR=$3
 LP_DIR=`cd $(dirname $0); cd ..; pwd`
 
 function error() {
@@ -32,6 +33,15 @@ function indent() {
 	*)      sed -u "$c";;
   esac
 }
+
+# exporting environment variables
+if [ -d "$ENV_DIR" ]; then
+  for e in $(ls $ENV_DIR); do
+    export "$e=$(cat $ENV_DIR/$e)"
+    :
+  done
+fi
+
 
 DPKG_CACHE_DIR="$CACHE_DIR/dpkg/cache"
 
@@ -56,7 +66,6 @@ done
 topic "Writing profile script"
 mkdir -p $BUILD_DIR/.profile.d
 cat <<EOF >$BUILD_DIR/.profile.d/000_dpkg.sh
-export HEROKU_SKIP_LIBPQ12=1
 export PATH="\$HOME/.dpkg/usr/bin:$PATH"
 export LD_LIBRARY_PATH="\$HOME/.dpkg/usr/lib:\$LD_LIBRARY_PATH"
 export LD_LIBRARY_PATH="\$HOME/.dpkg/usr/lib/x86_64-linux-gnu:\$LD_LIBRARY_PATH"
@@ -72,15 +81,21 @@ EOF
 export HOME=$BUILD_DIR
 source $HOME/.profile.d/000_dpkg.sh
 
-ub -v
+echo "unity base version: " && ub -v
+
 cd ~/app
-pwd
-env
 
 npm install
-# npx ubcli createStore
-# npx ubcli initDB -p admin -dba dbadmin -dbaPwd dba2634tgh374 -create -host http://localhost:8881
-# ub -cfg ubConfig.json
+echo 'createStore...'
+npx ubcli createStore
+echo 'initDB...'
+npx ubcli initDB -p admin -dba $DATABASE_USER -dbaPwd $DATABASE_PASSWORD -create -host http://localhost:8881
+echo 'generateDDL...'
+npx ubcli generateDDL -u admin -p admin -autorun
+echo 'initialize...'
+npx ubcli initialize -u admin -p admin
+echo 'run app...'
+ub -cfg ubConfig.json
 
 echo "Compile ..."
 exit 0
