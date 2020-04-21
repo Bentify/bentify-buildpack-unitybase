@@ -49,7 +49,7 @@ mkdir -p $DPKG_CACHE_DIR
 
 
 
-cd DPKG_CACHE_DIR && ls -la
+cd $DPKG_CACHE_DIR && ls -la
 
 
 
