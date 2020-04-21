@@ -61,7 +61,7 @@ mkdir -p $BUILD_DIR/.dpkg
 
 for DEB in $(ls -1 $DPKG_CACHE_DIR/*.deb); do
   topic "Installing $(basename $DEB)"
-  # dpkg -x $DEB $BUILD_DIR/.dpkg/
+  dpkg -x $DEB $BUILD_DIR/.dpkg/
 
   topic $DEB
 
