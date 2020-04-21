@@ -52,9 +52,10 @@ for URL in $(cat $BUILD_DIR/Debfile); do
 	topic "Loading cached $URL"
   else
     topic "Fetching $URL"
-    curl -L -o $DPKG_CACHE_DIR/`basename $URL` $URL  --insecure
+    curl -LJO -o $DPKG_CACHE_DIR/`basename $URL` $URL  --insecure
   fi
 done
+
 
 mkdir -p $BUILD_DIR/.dpkg
 
