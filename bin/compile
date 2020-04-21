@@ -65,7 +65,7 @@ for DEB in $(ls -1 $DPKG_CACHE_DIR/*.deb); do
 
   topic $DEB
 
-  cat $DPKG_CACHE_DIR/*.deb | sha256sum
+  cat $DEB | sha256sum
 done
 
 topic "Writing profile script"
