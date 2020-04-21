@@ -44,6 +44,7 @@ fi
 
 
 DPKG_CACHE_DIR="$CACHE_DIR/dpkg/cache"
+mkdir -p $DPKG_CACHE_DIR
 
 
 
@@ -51,9 +52,6 @@ DPKG_CACHE_DIR="$CACHE_DIR/dpkg/cache"
 cd DPKG_CACHE_DIR && ls -la
 
 
-
-
-mkdir -p $DPKG_CACHE_DIR
 
 for URL in $(cat $BUILD_DIR/Debfile); do
   # if [ -f $DPKG_CACHE_DIR/`basename $URL` ]; then
