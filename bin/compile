@@ -63,8 +63,6 @@ for DEB in $(ls -1 $DPKG_CACHE_DIR/*.deb); do
   topic "Installing $(basename $DEB)"
   # dpkg -x $DEB $BUILD_DIR/.dpkg/
 
-  rm $DEB
-
   topic $DEB
 
   cat $DEB | sha256sum
