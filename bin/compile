@@ -101,8 +101,8 @@ echo 'createStore...'
 npx ubcli createStore
 #echo 'initDB...'
 #npx ubcli initDB -p admin -dba $POSTGRES_USER -dbaPwd $POSTGRES_PASSWORD -create -drop -host http://localhost:8881 -cd
-echo 'generateDDL...'
-npx ubcli generateDDL -u admin -p admin -autorun
+# echo 'generateDDL...'
+# npx ubcli generateDDL -u admin -p admin -autorun
 echo 'initialize...'
 npx ubcli initialize -u admin -p admin
 echo 'run app...'
