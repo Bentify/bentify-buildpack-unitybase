@@ -47,31 +47,24 @@ DPKG_CACHE_DIR="$CACHE_DIR/dpkg/cache"
 mkdir -p $DPKG_CACHE_DIR
 
 
-
-
-# cd $DPKG_CACHE_DIR && rm ub-server.deb && ls -la
+cd $DPKG_CACHE_DIR && rm ub-server.deb && ls -la
 
 
 
 for URL in $(cat $BUILD_DIR/Debfile); do
-  # if [ -f $DPKG_CACHE_DIR/`basename $URL` ]; then
-	# topic "Loading cached $URL"
-  # else
+  if [ -f $DPKG_CACHE_DIR/`basename $URL` ]; then
+	topic "Loading cached $URL"
+  else
     topic "Fetching $URL"
     curl -LJO -o $DPKG_CACHE_DIR/`basename $URL` $URL  --insecure
-  #fi
+  fi
 done
-
 
 mkdir -p $BUILD_DIR/.dpkg
 
 for DEB in $(ls -1 $DPKG_CACHE_DIR/*.deb); do
   topic "Installing $(basename $DEB)"
   dpkg -x $DEB $BUILD_DIR/.dpkg/
-
-  topic $DEB
-
-  cat $DEB | sha256sum
 done
 
 topic "Writing profile script"
@@ -99,16 +92,14 @@ cd ~/app
 npm install
 echo 'createStore...'
 npx ubcli createStore
-#echo 'initDB...'
-#npx ubcli initDB -p admin -dba $POSTGRES_USER -dbaPwd $POSTGRES_PASSWORD -create -drop -host http://localhost:8881 -cd
-# echo 'generateDDL...'
-# npx ubcli generateDDL -u admin -p admin -autorun
-# echo 'initialize...'
-# npx ubcli initialize -u admin -p admin
+echo 'initDB...'
+npx ubcli initDB -p admin -dba $POSTGRES_USER -dbaPwd $POSTGRES_PASSWORD -create -drop -host http://localhost:8881 -cd
+echo 'generateDDL...'
+npx ubcli generateDDL -u admin -p admin -autorun
+echo 'initialize...'
+npx ubcli initialize -u admin -p admin
 echo 'run app...'
 ub -cfg ubConfig.json
 
 echo "Compile ..."
 exit 0
-
-
