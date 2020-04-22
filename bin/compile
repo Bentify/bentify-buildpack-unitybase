@@ -46,14 +46,6 @@ fi
 DPKG_CACHE_DIR="$CACHE_DIR/dpkg/cache"
 mkdir -p $DPKG_CACHE_DIR
 
-
-ls -la
-
-
-cd $DPKG_CACHE_DIR && rm ub-server_5.18.1.19568_amd64.deb && ls -la
-
-ls -la
-
 for URL in $(cat $BUILD_DIR/Debfile); do
   if [ -f $DPKG_CACHE_DIR/`basename $URL` ]; then
 	topic "Loading cached $URL"
@@ -87,7 +79,6 @@ EOF
 
 export HOME=$BUILD_DIR
 source $HOME/.profile.d/000_dpkg.sh
-
 echo "unity base version: " && ub -v
 
 cd ~/app
